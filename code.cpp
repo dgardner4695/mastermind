@@ -111,5 +111,6 @@ int main()
 	std::cout << "Guess 3: ";
 	print_vect(g3);
 	std::cout << first << ' ' << second << std::endl;
+	system("pause");
 	return 0;
 }
