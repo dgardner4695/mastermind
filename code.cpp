@@ -2,15 +2,37 @@
 #include <algorithm>
 #include <stdlib.h>
 #include <time.h>
+#include <cmath>
 #include "code.h"
 
-code::code(int n, int m)
+using namespace std;
+
+code::code(int n, int m, bool guess = false)
 {
 	/* Call init_code to generate a new secret code
 	for the code object */
-	secret.resize(n);
-	guess.resize(n);
-	init_code(m);
+	if (guess)
+	{
+		int digit;
+		for (int i = 0; i < n; i++)
+		{
+			cout << "Enter the next digit in your guess: ";
+			cin >> digit;
+			while (!(cin) || digit < 0 || digit > m)
+			{
+				cin.clear();
+				cin.ignore();
+				cout << "Incorrect parameter, try again: ";
+				cin >> digit;
+			}
+			codeData.push_back(digit);
+		}
+	}
+	else
+	{
+		codeData.resize(n);
+		init_code(m);
+	}
 }
 
 void code::init_code(int range)
@@ -19,28 +41,27 @@ void code::init_code(int range)
 	srand(time(NULL));
 
 	//Loop over the secret vector
-	std::cout << "Secret code: ";
-	for (int i = 0; i < secret.size(); i++)
+	cout << "Secret code: ";
+	for (int i = 0; i < codeData.size(); i++)
 	{
 		//Each element is created randomly with a range [0, range-1]
-		secret[i] = rand() % range;
-		std::cout << secret[i];
+		codeData.at(i) = rand() % range;
+		cout << codeData.at(i);
 	}
-	std::cout << std::endl;
+	cout << endl;
 }
 
 int code::checkCorrect(const code& c)
 {
-	//Initial num of correct positions
-	int numCorrect = 0;
 	//Loop through the guess
-	for (int i = 0; i < c.guess.size(); i++)
+	for (int i = 0; i < c.codeData.size(); i++)
 	{
 		//Check if each element matches the element at the same position
-		if (c.guess[i] == secret[i])
+		if (c.codeData.at(i) == codeData.at(i))
 		{
 			//Increment if true
 			numCorrect++;
+			//Add index to list to prevent counting twice
 		}
 	}
 	return numCorrect;
@@ -48,69 +69,63 @@ int code::checkCorrect(const code& c)
 
 int code::checkIncorrect(const code& c)
 {
-	int numIncorrect = 0;
-	std::vector<int> checkedNums;
-	for (int i = 0; i < c.guess.size(); i++)
+	//Vector to hold history of already checked values
+	vector<int> checkedNums;
+	for (int i = 0; i < codeData.size(); i++)
 	{
-		//First make sure that the current elements value does not match a previously checked value
-		if (std::find(checkedNums.begin(), checkedNums.end(), c.guess[i]) == checkedNums.end())
+		//Check if the current value had already been checked
+		if (find(checkedNums.begin(), checkedNums.end(), codeData.at(i)) == checkedNums.end())
 		{
-			//If it does not, add it to the vector of checked values
-			checkedNums.push_back(c.guess[i]);
-			//Check if the value matches any values in the secret vector
-			if (std::find(c.secret.begin(), c.secret.end(), c.guess[i]) != c.secret.end())
-			{
-				//If so, increment numIncorrect
-				numIncorrect++;
-			}
+			//If not, add it to the list of checked values
+			checkedNums.push_back(codeData.at(i));
+			//Find number of occurrences of value in both the secret and guess codes
+			int numInSecret = count(codeData.begin(), codeData.end(), codeData.at(i));
+			int numInGuess = count(c.codeData.begin(), c.codeData.end(), codeData.at(i));
+			//Smallest # of occurrences is equal to the amount of occurrences in common
+			numIncorrect += min(numInSecret, numInGuess);
 		}
 	}
+	//Adjust the # of incorrect values to account for values at identical indexes
+	numIncorrect -= numCorrect;
 	return numIncorrect;
-}
-
-void code::setGuess(std::vector<int> g)
-{
-	guess = g;
-}
-
-void print_vect(std::vector<int> v)
-{
-	for (int i = 0; i < v.size(); i++)
-	{
-		std::cout << v[i];
-	}
-	std::cout << std::endl;
 }
 
 int main()
 {
-	code ex1 = code(5, 7);
-	int guess1[] = {5, 0, 3, 2, 6};
-	int guess2[] = {2, 1, 2, 2, 2};
-	int guess3[] = {1, 3, 3, 4, 5};
-	std::vector<int> g1(guess1, guess1 + (sizeof(guess1)/sizeof(guess1[0])));
-	ex1.setGuess(g1);
-	int first = ex1.checkCorrect(ex1);
-	int second  = ex1.checkIncorrect(ex1);
-	std::cout << "Guess 1: ";
-	print_vect(g1);
-	std::cout << first << ' ' << second << std::endl;
-
-	std::vector<int> g2(guess2, guess2 + (sizeof(guess2)/sizeof(guess2[0])));
-	ex1.setGuess(g2);
-	first = ex1.checkCorrect(ex1);
-	second = ex1.checkIncorrect(ex1);
-	std::cout << "Guess 2: ";
-	print_vect(g2);
-	std::cout << first << ' ' << second << std::endl;
-
-	std::vector<int> g3(guess3, guess3 + (sizeof(guess3)/sizeof(guess3[0])));
-	ex1.setGuess(g3);
-	first = ex1.checkCorrect(ex1);
-	second = ex1.checkIncorrect(ex1);
-	std::cout << "Guess 3: ";
-	print_vect(g3);
-	std::cout << first << ' ' << second << std::endl;
+	//Initialize length and range integers
+	int n, m;
+	//User input and error handling
+	cout << "Enter the desired code length: ";
+	while (!(cin >> n) || n <= 0)
+	{
+		cin.clear();
+		cin.ignore();
+		cout << "Input must be an integer, try again: ";
+	}
+	cout << "Enter the maximum value for the random number generator: ";
+	while (!(cin >> m) || m <= 0)
+	{
+		cin.clear();
+		cin.ignore();
+		cout << "Input must be an integer, try again: ";
+	}
+	/*Create the secret code and guess code objects using
+	the parameters n and m*/
+	code sc(n, m);
+	code gc(n, m, true);
+	/*First is # of numbers in correct position
+	Second is # of correct numbers in incorrect position*/
+	int first = sc.checkCorrect(gc);
+	int second = sc.checkIncorrect(gc);
+	cout << first << second << endl;
+	if (first == n)
+	{
+		cout << "You win!" << endl;
+	}
+	else
+	{
+		cout << "Too bad, try again" << endl;
+	}
 	system("pause");
 	return 0;
 }
