@@ -2,7 +2,6 @@
 #include <algorithm>
 #include <stdlib.h>
 #include <time.h>
-#include <cmath>
 #include "code.h"
 
 using namespace std;
