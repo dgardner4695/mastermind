@@ -2,36 +2,47 @@
 #include <algorithm>
 #include <stdlib.h>
 #include <time.h>
+#include <sstream>
+#include <string>
 #include "code.h"
 
 using namespace std;
 
-code::code(int n, int m, bool guess = false)
+vector<int> split(string &s, char delim){
+    vector<int> nums;
+    string digit;
+    int n;
+    stringstream ss;
+    ss.str(s);
+    while(getline(ss,digit,delim)){
+        n = atoi(digit.c_str());
+        nums.push_back(n);
+    }
+
+    return nums;
+}
+
+code::code(int n, int m, bool guess)
 {
+	string str;
 	/* Call init_code to generate a new secret code
 	for the code object */
-	if (guess)
-	{
-		int digit;
-		for (int i = 0; i < n; i++)
-		{
-			cout << "Enter the next digit in your guess: ";
-			cin >> digit;
-			while (!(cin) || digit < 0 || digit > m)
-			{
-				cin.clear();
-				cin.ignore();
-				cout << "Incorrect parameter, try again: ";
-				cin >> digit;
-			}
-			codeData.push_back(digit);
-		}
-	}
-	else
-	{
-		codeData.resize(n);
-		init_code(m);
-	}
+    if (guess)
+    {
+        cout << "Enter code with digits seperated by commas";
+        cin >> str;
+        while(str.length() != (n * 2) - 1){
+            cout << "Invalid input" << endl;
+            cout << "Enter code with digits seperated by commas";
+            cin >> str;
+        }
+        codeData = split(str, ',');
+    }
+    else
+    {
+        codeData.resize(n);
+        init_code(m);
+    }
 }
 
 void code::init_code(int range)
@@ -46,6 +57,9 @@ void code::init_code(int range)
 		//Each element is created randomly with a range [0, range-1]
 		codeData.at(i) = rand() % range;
 		cout << codeData.at(i);
+        if(i < codeData.size() - 1){
+            cout << ",";
+        }
 	}
 	cout << endl;
 }
@@ -69,6 +83,7 @@ int code::checkCorrect(const code& c)
 int code::checkIncorrect(const code& c)
 {
 	//Vector to hold history of already checked values
+    int digit;
 	vector<int> checkedNums;
 	for (int i = 0; i < codeData.size(); i++)
 	{
@@ -76,7 +91,8 @@ int code::checkIncorrect(const code& c)
 		if (find(checkedNums.begin(), checkedNums.end(), codeData.at(i)) == checkedNums.end())
 		{
 			//If not, add it to the list of checked values
-			checkedNums.push_back(codeData.at(i));
+            digit = codeData.at(i);
+			checkedNums.push_back(digit);
 			//Find number of occurrences of value in both the secret and guess codes
 			int numInSecret = count(codeData.begin(), codeData.end(), codeData.at(i));
 			int numInGuess = count(c.codeData.begin(), c.codeData.end(), codeData.at(i));
@@ -91,40 +107,38 @@ int code::checkIncorrect(const code& c)
 
 int main()
 {
-	//Initialize length and range integers
-	int n, m;
-	//User input and error handling
-	cout << "Enter the desired code length: ";
-	while (!(cin >> n) || n <= 0)
-	{
-		cin.clear();
-		cin.ignore();
-		cout << "Input must be an integer, try again: ";
-	}
-	cout << "Enter the maximum value for the random number generator: ";
-	while (!(cin >> m) || m <= 0)
-	{
-		cin.clear();
-		cin.ignore();
-		cout << "Input must be an integer, try again: ";
-	}
-	/*Create the secret code and guess code objects using
-	the parameters n and m*/
-	code sc(n, m);
-	code gc(n, m, true);
-	/*First is # of numbers in correct position
-	Second is # of correct numbers in incorrect position*/
-	int first = sc.checkCorrect(gc);
-	int second = sc.checkIncorrect(gc);
-	cout << first << second << endl;
-	if (first == n)
-	{
-		cout << "You win!" << endl;
-	}
-	else
-	{
-		cout << "Too bad, try again" << endl;
-	}
-	system("pause");
+    //Initialize length and range integers
+    int n, m;
+    //User input and error handling
+    cout << "Enter the desired code length: ";
+    while (!(cin >> n) || n <= 0)
+    {
+        cin.clear();
+        cin.ignore();
+        cout << "Input must be an integer, try again: " << endl;
+    }
+    cout << "Enter the maximum value for the random number generator: ";
+    while (!(cin >> m) || m <= 0)
+    {
+        cin.clear();
+        cin.ignore();
+        cout << "Input must be an integer, try again: " << endl;
+    }
+    /*Create the secret code and guess code objects using
+    the parameters n and m*/
+    code sc(n, m, false);
+    code gc(n, m, true);
+    /*First is # of numbers in correct position
+    Second is # of correct numbers in incorrect position*/
+    int first = sc.checkCorrect(gc);
+    int second = sc.checkIncorrect(gc);
+    cout << endl << "digits in correct position: " << first << endl << "digits in incorrect position: " << second << endl;
+    if(first == n){
+        cout << "You Win!" << endl;
+    }
+    else{
+        cout << "You Lose" << endl;
+    }
+    system("pause");
 	return 0;
 }
