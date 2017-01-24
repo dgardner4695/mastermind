@@ -9,6 +9,7 @@
 using namespace std;
 
 vector<int> split(string &s, char delim){
+    //function to split a string seperated by commas into integers and stores them in a vector
     vector<int> nums;
     string digit;
     int n;
@@ -31,6 +32,7 @@ code::code(int n, int m, bool guess)
     {
         cout << "Enter code with digits seperated by commas";
         cin >> str;
+        //check for input length
         while(str.length() != (n * 2) - 1){
             cout << "Invalid input" << endl;
             cout << "Enter code with digits seperated by commas";
