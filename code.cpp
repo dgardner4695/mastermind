@@ -3,12 +3,14 @@
 #include <stdlib.h>
 #include <time.h>
 #include <sstream>
+#include <locale>
 #include <string>
+#include <ctype.h>
 #include "code.h"
 
 using namespace std;
 
-vector<int> split(string &s, char delim){
+vector<int> split(string &s, char delim, int max){
     //function to split a string seperated by commas into integers and stores them in a vector
     vector<int> nums;
     string digit;
@@ -17,6 +19,9 @@ vector<int> split(string &s, char delim){
     ss.str(s);
     while(getline(ss,digit,delim)){
         n = atoi(digit.c_str());
+        if(n > max){
+            cout << endl << "One of your digits is greater than the maximum value" << endl;
+        }
         nums.push_back(n);
     }
 
@@ -26,6 +31,9 @@ vector<int> split(string &s, char delim){
 code::code(int n, int m, bool guess)
 {
 	string str;
+    bool isValid = true;
+    int numCommas = 0;
+    locale loc;
 	/* Call init_code to generate a new secret code
 	for the code object */
     if (guess)
@@ -33,12 +41,31 @@ code::code(int n, int m, bool guess)
         cout << "Enter code with digits seperated by commas";
         cin >> str;
         //check for input length
-        while(str.length() != (n * 2) - 1){
-            cout << "Invalid input" << endl;
-            cout << "Enter code with digits seperated by commas";
-            cin >> str;
+        for(char c : str){
+            if(!isdigit(c, loc) && c != ','){
+                isValid = false;
+            }
+            if(c == ','){
+                numCommas++;
+            }
         }
-        codeData = split(str, ',');
+        while(numCommas != n-1 || !isValid){
+            isValid = true;
+            numCommas = 0;
+            cout << "Invalid input" << endl;
+            cout << "Enter code with digits separated by commas";
+            cin >> str;
+            for(char c : str){       //checks for non number or delimiter characters
+                if(!isdigit(c, loc) && c != ','){
+                    isValid = false;
+                }
+                if(c == ','){
+                    numCommas++;
+                }
+            }
+        }
+       codeData = split(str, ',', m);
+
     }
     else
     {
