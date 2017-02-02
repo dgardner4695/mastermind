@@ -31,9 +31,9 @@ void response::setIncorrect(int incorrect)
 
 //== Operator overloaded, returns true if both
 //correct and incorrect are equal
-bool operator == (const response& r2)
+bool response::operator== (const response& r1)
 {
-	if (getCorrect() == r2.getCorrect() && getIncorrect() == r2.getIncorrect())
+	if (getCorrect() == r1.getCorrect() && getIncorrect() == r1.getIncorrect())
 	{
 		return true;
 	}
@@ -44,6 +44,6 @@ bool operator == (const response& r2)
 //separated by a space.
 std::ostream& operator<< (std::ostream& ostr, const response& r)
 {
-	ostr << r.numCorrect << " " << r.numIncorrect << std::endl;
+	ostr << "Numbers in the correct place: " << r.numCorrect << std::endl << "Numbers in the incorrect place " << r.numIncorrect << std::endl;
 	return ostr;
 }

@@ -6,6 +6,7 @@
 #include "mastermind.h"
 #include <sstream>
 #include <cstdlib>
+#include "response.cpp"
 
 
 mastermind::mastermind() : sc(5, 10, false){
@@ -30,8 +31,11 @@ void mastermind::printSecretCode() {
     std::vector<int> codeData = sc.getCodeData();
 
     std::cout << "secret code: ";
-    for(int i: codeData){
-        std::cout << codeData[i] << " "; //output each number in the secret code
+    for(int i = 0; i < numDigits; i++){
+        std::cout << codeData.at(i);//output each number in the secret code
+        if(i < numDigits - 1){
+            std::cout << ",";
+        }
     }
     std::cout << std::endl;
 }
@@ -53,7 +57,8 @@ response mastermind::getResponse(code sc, code gc){
     int numCorrect = sc.checkCorrect(gc);
     int numIncorrect = sc.checkIncorrect(gc);
     //creates a response
-    return response(numCorrect, numIncorrect);
+    response r = response(numCorrect, numIncorrect);
+    return r;
 }
 
 bool mastermind::isSolved(response r){
@@ -63,14 +68,37 @@ bool mastermind::isSolved(response r){
 
 void mastermind::playGame(){
     bool gameWon = false;
+    bool gameLost = false;
+    int roundsPlayed = 0;
+    response r(0,0);
 
-    while(!gameWon){
-        if(isSolved(getResponse(sc, humanGuess()))){ //gets user input -> creates a response -> checks if the response is "solved"
+    while(!gameWon && roundsPlayed < 10){
+        r = getResponse(sc, humanGuess());//gets user input -> creates a response
+        if(isSolved(r)){ //checks if the response is "solved"
             gameWon = true;
+        }else {
+            std:: cout << r;
+            roundsPlayed++;
         }
     }
+    if(roundsPlayed >= 10){
+        std::cout << std::endl << "You lose";
+    }
+    else{
+        std::cout << std::endl << "You win";
+    }
 
-    std::cout << std::endl << "You win";
+}
+
+int main(){
+    mastermind mm = mastermind();
+    mm.printSecretCode();
+
+    //mm.printSecretCode();
+
+    mm.playGame();
+
+    return 0;
 }
 
 

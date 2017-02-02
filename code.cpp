@@ -77,14 +77,13 @@ void code::init_code(int range)
 	srand(time(NULL));
 
 	//Loop over the secret vector
-	cout << "Secret code: ";
 	for (int i = 0; i < codeData.size(); i++)
 	{
 		//Each element is created randomly with a range [0, range-1]
 		codeData.at(i) = rand() % range;
-		cout << codeData.at(i);
+		//cout << codeData.at(i);
         if(i < codeData.size() - 1){
-            cout << ",";
+            //cout << ",";
         }
 	}
 	cout << endl;
@@ -135,40 +134,4 @@ vector<int> code::getCodeData(){
     return this->codeData;
 }
 
-int main()
-{
-    //Initialize length and range integers
-    int n, m;
-    //User input and error handling
-    cout << "Enter the desired code length: ";
-    while (!(cin >> n) || n <= 0)
-    {
-        cin.clear();
-        cin.ignore();
-        cout << "Input must be an integer, try again: " << endl;
-    }
-    cout << "Enter the maximum value for the random number generator: ";
-    while (!(cin >> m) || m <= 0)
-    {
-        cin.clear();
-        cin.ignore();
-        cout << "Input must be an integer, try again: " << endl;
-    }
-    /*Create the secret code and guess code objects using
-    the parameters n and m*/
-    code sc(n, m, false);
-    code gc(n, m, true);
-    /*First is # of numbers in correct position
-    Second is # of correct numbers in incorrect position*/
-    int first = sc.checkCorrect(gc);
-    int second = sc.checkIncorrect(gc);
-    cout << endl << "digits in correct position: " << first << endl << "digits in incorrect position: " << second << endl;
-    if(first == n){
-        cout << "You Win!" << endl;
-    }
-    else{
-        cout << "You Lose" << endl;
-    }
-    system("pause");
-	return 0;
-}
+
