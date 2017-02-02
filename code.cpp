@@ -134,6 +134,10 @@ int code::checkIncorrect(const code& c)
 	return numIncorrect;
 }
 
+vector<int> code::getCodeData(){
+    return this->codeData;
+}
+
 int main()
 {
     //Initialize length and range integers
