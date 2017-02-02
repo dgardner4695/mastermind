@@ -31,9 +31,9 @@ void response::setIncorrect(int incorrect)
 
 //== Operator overloaded, returns true if both
 //correct and incorrect are equal
-bool operator == (const response& r1, const response& r2)
+bool operator == (const response& r2)
 {
-	if (r1.getCorrect() == r2.getCorrect() && r1.getIncorrect() == r2.getIncorrect())
+	if (getCorrect() == r2.getCorrect() && getIncorrect() == r2.getIncorrect())
 	{
 		return true;
 	}

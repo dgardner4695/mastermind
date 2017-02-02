@@ -11,6 +11,7 @@ class response
 		int getIncorrect() const;
 		void setCorrect(int correct);
 		void setIncorrect(int incorrect);
+		bool operator== (response r);
 		//Friend function overloading the << operator
 		friend std::ostream& operator<< (std::ostream& ostr, const response& r);
 	private:

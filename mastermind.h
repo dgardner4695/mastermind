@@ -12,14 +12,19 @@
 class mastermind {
 private:
     code sc;
+    int numDigits;
+    int maxDigit;
 public:
     mastermind(int numDigits, int maxDigit);
     mastermind();
     void printSecretCode();
     code humanGuess();
-    response getResponse();
+    response getResponse(code sc, code gc);
     void playGame();
     code getSecretCode();
+    int getMax();
+    int getNumDigits();
+    bool isSolved(response r);
 };
 
 

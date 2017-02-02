@@ -1,11 +1,8 @@
 #include <iostream>
 #include <algorithm>
-#include <stdlib.h>
 #include <time.h>
 #include <sstream>
 #include <locale>
-#include <string>
-#include <ctype.h>
 #include "code.h"
 
 using namespace std;

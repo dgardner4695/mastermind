@@ -10,7 +10,7 @@ class code
 		void setGuess(std::vector<int> g);
 		int checkCorrect(const code& c);
 		int checkIncorrect(const code& c);
-        std::vector<int> code::getCodeData();
+        std::vector<int> getCodeData();
 	private:
 		std::vector<int> codeData;
 		int numCorrect = 0;
