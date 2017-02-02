@@ -1,3 +1,6 @@
+#ifndef CODE_H
+#define CODE_H
+
 #include <vector>
 class code
 {
@@ -12,3 +15,4 @@ class code
 		int numCorrect = 0;
 		int numIncorrect = 0;
 };
+#endif
