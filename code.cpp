@@ -77,6 +77,7 @@ void code::init_code(int range)
 	srand(time(NULL));
 
 	//Loop over the secret vector
+	//cout << "Secret code: ";
 	for (int i = 0; i < codeData.size(); i++)
 	{
 		//Each element is created randomly with a range [0, range-1]

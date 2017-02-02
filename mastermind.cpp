@@ -91,10 +91,24 @@ void mastermind::playGame(){
 }
 
 int main(){
-    mastermind mm = mastermind();
+    int n, m;
+    //User input and error handling
+    std::cout << "Enter the desired code length: ";
+    while (!(std::cin >> n) || n <= 0)
+    {
+        std::cin.clear();
+        std::cin.ignore();
+        std::cout << "Input must be an integer, try again: " << std::endl;
+    }
+    std::cout << "Enter the maximum value for the random number generator: ";
+    while (!(std::cin >> m) || m <= 0)
+    {
+        std::cin.clear();
+        std::cin.ignore();
+        std::cout << "Input must be an integer, try again: " << std::endl;
+    }
+    mastermind mm = mastermind(n,m);
     mm.printSecretCode();
-
-    //mm.printSecretCode();
 
     mm.playGame();
 
