@@ -35,7 +35,7 @@ code::code(int n, int m, bool guess)
 	for the code object */
     if (guess)
     {
-        cout << "Enter code with digits seperated by commas";
+        cout << "Enter code with digits seperated by commas: ";
         cin >> str;
         //check for input length
         for(char c : str){
@@ -49,8 +49,8 @@ code::code(int n, int m, bool guess)
         while(numCommas != n-1 || !isValid){
             isValid = true;
             numCommas = 0;
-            cout << "Invalid input" << endl;
-            cout << "Enter code with digits separated by commas";
+            cout << "Invalid input\n" << endl;
+            cout << "Enter code with digits separated by commas\n";
             cin >> str;
             for(char c : str){       //checks for non number or delimiter characters
                 if(!isdigit(c, loc) && c != ','){

@@ -6,7 +6,7 @@
 #include "mastermind.h"
 #include <sstream>
 #include <cstdlib>
-#include "response.cpp"
+#include "response.h"
 
 
 mastermind::mastermind() : sc(5, 10, false){
